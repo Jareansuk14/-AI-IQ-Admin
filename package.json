@@ -2,7 +2,6 @@
   "name": "bot-line-admin",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://ai-iq-server.onrender.com",
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",

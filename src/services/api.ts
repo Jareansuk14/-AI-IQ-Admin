@@ -14,26 +14,28 @@ const getApiBaseUrl = () => {
     return 'https://ai-iq-server.onrender.com/api';
   }
   
-  // ถ้าเป็น production build แต่ไม่ได้ deploy บน vercel
-  if (process.env.NODE_ENV === 'production') {
-    console.log('Production build detected, using production API');
-    return 'https://ai-iq-server.onrender.com/api';
+  // ถ้าเป็น localhost ให้ใช้ development server
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    console.log('Development mode, using localhost');
+    return 'http://localhost:5000/api';
   }
   
-  // ถ้าเป็น development ให้ใช้ proxy
-  console.log('Development mode, using proxy');
-  return '/api';
+  // Default to production API
+  console.log('Default to production API');
+  return 'https://ai-iq-server.onrender.com/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
 
 console.log('Final API Base URL:', API_BASE_URL); // Debug log
+console.log('Window location:', window.location.hostname); // Debug hostname
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: false // ปิด credentials เพื่อหลีกเลี่ยงปัญหา CORS
 });
 
 // Request interceptor for auth token
