@@ -1,46 +1,95 @@
-# Getting Started with Create React App
+# Bot Line Admin Panel 🤖
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Admin panel สำหรับจัดการระบบ Bot Line IQ ด้วย React และ TypeScript
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+- 📊 **Dashboard** - ภาพรวมระบบ สถิติผู้ใช้ และการใช้งานเครดิต
+- 👥 **จัดการผู้ใช้** - ดูข้อมูลผู้ใช้ และจัดการเครดิตรายบุคคล
+- 💰 **ระบบเครดิต** - ติดตามธุรกรรม เพิ่ม/หักเครดิต และเพิ่มเครดิตแบบกลุ่ม
+- 🤖 **จัดการคำสั่งบอท** - เพิ่ม แก้ไข ลบ และเปิด/ปิดคำสั่ง
+- 🔐 **ระบบ Authentication** - เข้าสู่ระบบด้วย JWT
 
-### `npm start`
+## 🚀 การติดตั้ง
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### ข้อกำหนดเบื้องต้น
+- Node.js 16+ 
+- npm หรือ yarn
+- Backend server ทำงานที่ port 5000
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### ขั้นตอนการติดตั้ง
 
-### `npm test`
+1. เข้าไปยังโฟลเดอร์โปรเจค
+```bash
+cd bot-line-admin
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. ติดตั้ง dependencies
+```bash
+npm install
+```
 
-### `npm run build`
+3. สร้างไฟล์ `.env` และกำหนดค่า
+```env
+REACT_APP_API_URL=http://localhost:5000/api
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. รันโปรเจค
+```bash
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+แอพจะเปิดที่ http://localhost:3000
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🎨 เทคโนโลยีที่ใช้
 
-### `npm run eject`
+- **React 19** - UI Library
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **React Query** - Data fetching & caching
+- **React Router** - Routing
+- **Chart.js** - Data visualization
+- **Framer Motion** - Animations
+- **Axios** - HTTP client
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 📁 โครงสร้างโปรเจค
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+src/
+├── components/       # React components
+│   ├── common/      # Shared components
+│   └── layout/      # Layout components
+├── contexts/        # React contexts
+├── pages/          # Page components
+├── services/       # API services
+├── types/          # TypeScript types
+└── utils/          # Utility functions
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## 🔑 การใช้งาน
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### เข้าสู่ระบบ
+ใช้ username และ password ของแอดมินที่ลงทะเบียนไว้ในระบบ
 
-## Learn More
+### API Endpoints ที่ใช้
+- `POST /api/auth/login` - เข้าสู่ระบบ
+- `GET /api/admin/dashboard` - ข้อมูล dashboard
+- `GET /api/admin/users` - รายการผู้ใช้
+- `POST /api/admin/credits/add/:userId` - เพิ่ม/หักเครดิต
+- `GET /api/admin/commands` - รายการคำสั่ง
+- และอื่นๆ
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🎯 หน้าจอหลัก
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. **Dashboard** - สรุปภาพรวมระบบ กราฟผู้ใช้รายวัน และการใช้เครดิต
+2. **ผู้ใช้งาน** - ตารางแสดงผู้ใช้ทั้งหมด พร้อมฟิลเตอร์และการจัดการเครดิต
+3. **จัดการเครดิต** - ประวัติธุรกรรมเครดิต และเพิ่มเครดิตแบบกลุ่ม
+4. **คำสั่งบอท** - จัดการคำสั่งแบ่งตามหมวดหมู่
+
+## 🌙 ธีม
+แอพใช้ธีม Dark mode สไตล์ไฮเทค พร้อม glass morphism effects และ neon glow
+
+## 📝 หมายเหตุ
+- ต้องรัน Backend server ก่อนใช้งาน Admin panel
+- ใช้ proxy ใน development เพื่อหลีกเลี่ยงปัญหา CORS
+- Token จะถูกเก็บใน localStorage
