@@ -29,25 +29,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+    // Check if there's a token and stored admin info
     const token = localStorage.getItem('token');
-    if (!token) {
-      setIsLoading(false);
-      return;
+    const storedAdmin = localStorage.getItem('admin');
+    
+    if (token && storedAdmin) {
+      try {
+        setAdmin(JSON.parse(storedAdmin));
+      } catch (error) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('admin');
+      }
     }
-
-    try {
-      const response = await api.get('/auth/me');
-      setAdmin(response.data);
-    } catch (error) {
-      localStorage.removeItem('token');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setIsLoading(false);
+  }, []);
 
   const login = async (username: string, password: string) => {
     try {
@@ -55,6 +50,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const { token, admin } = response.data;
       
       localStorage.setItem('token', token);
+      localStorage.setItem('admin', JSON.stringify(admin));
       setAdmin(admin);
       window.location.href = '/';
     } catch (error: any) {
@@ -64,6 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('admin');
     setAdmin(null);
     window.location.href = '/login';
   };

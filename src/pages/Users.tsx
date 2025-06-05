@@ -71,14 +71,14 @@ const Users: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between sm:items-center">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text text-transparent">
             จัดการผู้ใช้
           </h1>
-          <p className="text-dark-500 mt-2">ข้อมูลผู้ใช้งานระบบทั้งหมด</p>
+          <p className="text-dark-500 mt-1 md:mt-2 text-sm md:text-base">ข้อมูลผู้ใช้งานระบบทั้งหมด</p>
         </div>
         
         {/* Filter */}
@@ -86,7 +86,7 @@ const Users: React.FC = () => {
           <select
             value={creditFilter}
             onChange={(e) => setCreditFilter(e.target.value)}
-            className="bg-dark-100 border border-dark-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="bg-dark-100 border border-dark-300 rounded-lg px-3 md:px-4 py-2 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 w-full sm:w-auto"
           >
             <option value="all">ทั้งหมด</option>
             <option value="no-credits">เครดิตหมด</option>
@@ -108,7 +108,57 @@ const Users: React.FC = () => {
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
+            {/* Mobile Card View */}
+            <div className="md:hidden divide-y divide-dark-300">
+              {data?.data.map((user) => (
+                <motion.div
+                  key={user._id}
+                  whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.02)' }}
+                  className="p-4 space-y-3"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary-400 to-purple-400 flex items-center justify-center">
+                        <UserIcon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium">{user.displayName}</div>
+                        <div className="text-xs text-dark-500 truncate max-w-[120px]">
+                          {user.lineUserId}
+                        </div>
+                      </div>
+                    </div>
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                      ${user.credits <= 0 ? 'bg-red-500/20 text-red-400' :
+                        user.credits <= 5 ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-green-500/20 text-green-400'}`}>
+                      <CreditCardIcon className="w-3 h-3 mr-1" />
+                      {user.credits}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center text-xs text-dark-500">
+                    <span>การโต้ตอบ: {user.interactionCount}</span>
+                    <span>
+                      {user.lastInteraction 
+                        ? format(new Date(user.lastInteraction), 'dd/MM/yyyy', { locale: th })
+                        : 'ไม่มีข้อมูล'
+                      }
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => openCreditModal(user)}
+                    className="w-full bg-primary-500/20 hover:bg-primary-500/30 text-primary-400 px-3 py-2 rounded-lg text-sm transition-colors"
+                  >
+                    จัดการเครดิต
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-dark-100 border-b border-dark-300">
                   <tr>
@@ -171,7 +221,10 @@ const Users: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-dark-400">
                         <div className="flex items-center">
                           <ClockIcon className="w-4 h-4 mr-1" />
-                          {format(new Date(user.lastInteraction), 'dd MMM yyyy HH:mm', { locale: th })}
+                          {user.lastInteraction 
+                            ? format(new Date(user.lastInteraction), 'dd MMM yyyy HH:mm', { locale: th })
+                            : 'ไม่มีข้อมูล'
+                          }
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
@@ -190,25 +243,25 @@ const Users: React.FC = () => {
 
             {/* Pagination */}
             {data?.pagination && data.pagination.pages > 1 && (
-              <div className="px-6 py-4 border-t border-dark-300 flex items-center justify-between">
-                <div className="text-sm text-dark-500">
+              <div className="px-4 md:px-6 py-4 border-t border-dark-300 flex flex-col sm:flex-row gap-3 sm:gap-0 sm:items-center sm:justify-between">
+                <div className="text-xs md:text-sm text-dark-500 text-center sm:text-left">
                   แสดง {((page - 1) * 10) + 1} - {Math.min(page * 10, data.pagination.total)} จาก {data.pagination.total} รายการ
                 </div>
-                <div className="flex gap-2">
+                <div className="flex justify-center gap-2">
                   <button
                     onClick={() => setPage(page - 1)}
                     disabled={page === 1}
-                    className="px-3 py-1 bg-dark-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-dark-200 transition-colors"
+                    className="px-3 py-1 bg-dark-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-dark-200 transition-colors text-sm"
                   >
                     ก่อนหน้า
                   </button>
-                  <span className="px-3 py-1">
+                  <span className="px-3 py-1 text-sm">
                     หน้า {page} จาก {data.pagination.pages}
                   </span>
                   <button
                     onClick={() => setPage(page + 1)}
                     disabled={page === data.pagination.pages}
-                    className="px-3 py-1 bg-dark-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-dark-200 transition-colors"
+                    className="px-3 py-1 bg-dark-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-dark-200 transition-colors text-sm"
                   >
                     ถัดไป
                   </button>
@@ -221,13 +274,13 @@ const Users: React.FC = () => {
 
       {/* Credit Modal */}
       {showCreditModal && selectedUser && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-dark-50 rounded-xl p-6 max-w-md w-full mx-4 glass-effect"
+            className="bg-dark-50 rounded-xl p-4 md:p-6 max-w-md w-full glass-effect"
           >
-            <h3 className="text-xl font-semibold mb-4">จัดการเครดิต</h3>
+            <h3 className="text-lg md:text-xl font-semibold mb-4">จัดการเครดิต</h3>
             <div className="space-y-4">
               <div>
                 <p className="text-sm text-dark-500">ผู้ใช้: {selectedUser.displayName}</p>
@@ -247,7 +300,7 @@ const Users: React.FC = () => {
                     type="number"
                     value={creditAmount}
                     onChange={(e) => setCreditAmount(parseInt(e.target.value) || 0)}
-                    className="flex-1 bg-dark-100 border border-dark-300 rounded-lg px-4 py-2 text-center focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="flex-1 bg-dark-100 border border-dark-300 rounded-lg px-4 py-2 text-center focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base"
                     placeholder="0"
                   />
                   <button
@@ -268,7 +321,7 @@ const Users: React.FC = () => {
                   type="text"
                   value={creditReason}
                   onChange={(e) => setCreditReason(e.target.value)}
-                  className="w-full bg-dark-100 border border-dark-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="w-full bg-dark-100 border border-dark-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm md:text-base"
                   placeholder="ระบุเหตุผล..."
                 />
               </div>
@@ -276,14 +329,14 @@ const Users: React.FC = () => {
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={() => setShowCreditModal(false)}
-                  className="flex-1 px-4 py-2 bg-dark-100 rounded-lg hover:bg-dark-200 transition-colors"
+                  className="flex-1 px-4 py-2 bg-dark-100 rounded-lg hover:bg-dark-200 transition-colors text-sm md:text-base"
                 >
                   ยกเลิก
                 </button>
                 <button
                   onClick={handleCreditSubmit}
                   disabled={creditAmount === 0 || addCreditMutation.isPending}
-                  className="flex-1 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                 >
                   {addCreditMutation.isPending ? 'กำลังบันทึก...' : 'ยืนยัน'}
                 </button>

@@ -44,18 +44,18 @@ const StatCard: React.FC<{
 }> = ({ title, value, icon: Icon, color, subtitle }) => (
   <motion.div
     whileHover={{ scale: 1.05 }}
-    className="glass-effect rounded-xl p-6"
+    className="glass-effect rounded-xl p-3 md:p-6"
   >
     <div className="flex items-center justify-between">
-      <div>
-        <p className="text-dark-500 text-sm">{title}</p>
-        <p className={`text-3xl font-bold mt-2 ${color}`}>{value}</p>
+      <div className="flex-1 min-w-0">
+        <p className="text-dark-500 text-xs md:text-sm truncate">{title}</p>
+        <p className={`text-xl md:text-3xl font-bold mt-1 md:mt-2 ${color} truncate`}>{value}</p>
         {subtitle && (
-          <p className="text-xs text-dark-400 mt-1">{subtitle}</p>
+          <p className="text-xs text-dark-400 mt-1 truncate">{subtitle}</p>
         )}
       </div>
-      <div className={`p-3 rounded-lg bg-gradient-to-r ${color} bg-opacity-20`}>
-        <Icon className="w-8 h-8" />
+      <div className={`p-2 md:p-3 rounded-lg bg-gradient-to-r ${color} bg-opacity-20 ml-2`}>
+        <Icon className="w-5 h-5 md:w-8 md:h-8" />
       </div>
     </div>
   </motion.div>
@@ -113,7 +113,7 @@ const Dashboard: React.FC = () => {
   };
 
   const userChartData = {
-    labels: stats?.dailyUsers.map(d => new Date(d.date).toLocaleDateString('th-TH', { weekday: 'short' })) || [],
+    labels: stats?.dailyUsers.map(d => d.date ? new Date(d.date).toLocaleDateString('th-TH', { weekday: 'short' }) : '') || [],
     datasets: [
       {
         label: 'ผู้ใช้งาน',
@@ -126,7 +126,7 @@ const Dashboard: React.FC = () => {
   };
 
   const creditChartData = {
-    labels: stats?.creditStats.dailyCreditUsage.map(d => new Date(d.date).toLocaleDateString('th-TH', { weekday: 'short' })) || [],
+    labels: stats?.creditStats.dailyCreditUsage.map(d => d.date ? new Date(d.date).toLocaleDateString('th-TH', { weekday: 'short' }) : '') || [],
     datasets: [
       {
         label: 'เครดิตที่ใช้',
@@ -139,17 +139,17 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text text-transparent">
+        <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary-400 to-purple-400 bg-clip-text text-transparent">
           Dashboard
         </h1>
-        <p className="text-dark-500 mt-2">ภาพรวมระบบ Bot Line IQ</p>
+        <p className="text-dark-500 mt-1 md:mt-2 text-sm md:text-base">ภาพรวมระบบ Bot Line IQ</p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
         <StatCard
           title="ผู้ใช้ทั้งหมด"
           value={stats?.totalUsers.toLocaleString() || '0'}
@@ -180,16 +180,16 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Daily Users Chart */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="glass-effect rounded-xl p-6"
+          className="glass-effect rounded-xl p-4 md:p-6"
         >
-          <h3 className="text-lg font-semibold mb-4">ผู้ใช้งานรายวัน</h3>
-          <div className="h-64">
+          <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4">ผู้ใช้งานรายวัน</h3>
+          <div className="h-48 md:h-64">
             <Line data={userChartData} options={chartOptions} />
           </div>
         </motion.div>
@@ -199,10 +199,10 @@ const Dashboard: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass-effect rounded-xl p-6"
+          className="glass-effect rounded-xl p-4 md:p-6"
         >
-          <h3 className="text-lg font-semibold mb-4">การใช้เครดิตรายวัน</h3>
-          <div className="h-64">
+          <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4">การใช้เครดิตรายวัน</h3>
+          <div className="h-48 md:h-64">
             <Bar data={creditChartData} options={chartOptions} />
           </div>
         </motion.div>
@@ -213,16 +213,16 @@ const Dashboard: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="glass-effect rounded-xl p-6"
+        className="glass-effect rounded-xl p-4 md:p-6"
       >
-        <h3 className="text-lg font-semibold mb-4">ผู้ใช้ใหม่ล่าสุด</h3>
-        <div className="grid grid-cols-1 md:grid-cols-7 gap-4 text-center">
+        <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4">ผู้ใช้ใหม่ล่าสุด</h3>
+        <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-7 gap-2 md:gap-4 text-center">
           {stats?.newUsers.map((item, index) => (
-            <div key={index} className="bg-dark-100 rounded-lg p-3">
+            <div key={index} className="bg-dark-100 rounded-lg p-2 md:p-3">
               <p className="text-xs text-dark-500">
-                {new Date(item.date).toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric' })}
+                {item.date ? new Date(item.date).toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric' }) : 'ไม่ระบุ'}
               </p>
-              <p className="text-2xl font-bold text-primary-400 mt-1">
+              <p className="text-lg md:text-2xl font-bold text-primary-400 mt-1">
                 {item.count}
               </p>
             </div>
